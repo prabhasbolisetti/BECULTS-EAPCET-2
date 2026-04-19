@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - BECULTS.EAMCET</title>
+    <meta name="description" content="User Profile Dashboard">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .profile-stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .profile-stat-label {
+            font-size: 0.875rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .profile-stat-value {
+            font-size: 1.25rem;
+            color: var(--color-white);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="profile-page">
+
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">BECULTS.EAMCET</a>
+            
+            <nav class="center-nav">
+                <a href="index.html">Home</a>
+                <a href="pyqs.html">PYQ's</a>
+                <a href="part-tests.html">Part Tests</a>
+                <a href="performance.html">Performance</a>
+            </nav>
+            
+            <div class="right-utils">
+                <a href="student-login.html" class="nav-link sign-in">Sign In</a>
+                <a href="student-login.html" class="btn btn-outline btn-pill">ride</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: var(--nav-height); min-height: calc(100vh - var(--nav-height)); display: flex; align-items: center; justify-content: center;">
+        <div class="container fade-in-up">
+            <div class="auth-card" style="max-width: 500px; margin: 0 auto; width: 100%;">
+                <div class="label-badge"><span class="dot" style="background-color: var(--color-lime);"></span> My Profile</div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">Dashboard</h2>
+                
+                <div id="profile-details">
+                    <div class="profile-stat-box">
+                        <div class="profile-stat-label">Full Name</div>
+                        <div class="profile-stat-value" id="profile-name">Loading...</div>
+                    </div>
+                    
+                    <div class="profile-stat-box">
+                        <div class="profile-stat-label">Email Address</div>
+                        <div class="profile-stat-value" id="profile-email">Loading...</div>
+                    </div>
+                    
+                    <div class="profile-stat-box">
+                        <div class="profile-stat-label">Phone Number</div>
+                        <div class="profile-stat-value" id="profile-phone">Loading...</div>
+                    </div>
+                    
+                    <div class="profile-stat-box" id="admin-badge" style="display: none; background-color: rgba(255, 76, 76, 0.1); border-color: rgba(255, 76, 76, 0.3);">
+                        <div class="profile-stat-label" style="color: #ff4c4c;">Account Type</div>
+                        <div class="profile-stat-value" style="color: #ff4c4c;">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Populate Profile Dashboard on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userSession = localStorage.getItem('becults_user');
+            if (userSession) {
+                const userData = JSON.parse(userSession);
+                document.getElementById('profile-name').textContent = userData.name || 'Not provided';
+                document.getElementById('profile-email').textContent = userData.email || 'Not provided';
+                document.getElementById('profile-phone').textContent = userData.phone || 'Not provided';
+                
+                if (userData.isAdmin) {
+                    document.getElementById('admin-badge').style.display = 'block';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

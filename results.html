@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - BECULTS.EAMCET</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        body {
+            background: #F7F8FB;
+            color: #0F172A;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .results-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            color: #0F172A;
+        }
+
+        .results-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .results-actions .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 999px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            font-weight: 700;
+            background: #F8FAFC;
+            color: #0F172A;
+        }
+
+        .results-actions .btn-primary {
+            background: #f97316;
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .results-body {
+            max-width: 1280px;
+            margin: 2rem auto 4rem;
+            padding: 0 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
+            padding: 1.5rem;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+        }
+
+        .summary-card strong {
+            display: block;
+            color: #475569;
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .subject-tabs {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+        }
+
+        .subject-tab {
+            padding: 0.85rem 1.25rem;
+            border-radius: 999px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            background: #F8FAFC;
+            cursor: pointer;
+            color: #0F172A;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .subject-tab.active {
+            background: rgba(16,185,129,0.18);
+            border-color: #10b981;
+            color: #0F172A;
+            box-shadow: 0 10px 30px rgba(16,185,129,0.14);
+        }
+
+        .subject-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .subject-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
+            padding: 1.25rem;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+        }
+
+        .subject-card h3 {
+            margin: 0 0 0.75rem;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
+            color: #0F172A;
+        }
+
+        .subject-card p {
+            margin: 0.5rem 0;
+            color: #475569;
+            font-size: 0.92rem;
+        }
+
+        .subject-card .subject-score {
+            margin-top: 1rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        .review-section {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 20px;
+            padding: 1.75rem;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.05);
+        }
+
+        .review-section h2 {
+            margin: 0 0 1rem;
+            font-size: 1.25rem;
+            color: #0F172A;
+        }
+
+        .review-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .review-status {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .status-pill {
+            padding: 0.5rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-pill.correct { background: rgba(16,185,129,0.16); color: #10b981; }
+        .status-pill.incorrect { background: rgba(248,113,113,0.14); color: #f87171; }
+        .status-pill.unanswered { background: rgba(251,191,36,0.14); color: #fbbf24; }
+
+        .answer-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .answer-card {
+            background: #F8FAFC;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 18px;
+            padding: 1.35rem 1.5rem;
+        }
+
+        .answer-card h3 {
+            margin: 0 0 0.75rem;
+            font-size: 1rem;
+            color: #0F172A;
+        }
+
+        .answer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .answer-meta span {
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        .answer-meta .badge {
+            border-radius: 999px;
+            padding: 0.25rem 0.65rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .badge.correct { background: rgba(16,185,129,0.16); color: #10b981; }
+        .badge.incorrect { background: rgba(248,113,113,0.16); color: #f87171; }
+        .badge.unanswered { background: rgba(248,211,77,0.16); color: #fbbf24; }
+
+        .answer-block {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .answer-block p {
+            margin: 0;
+            line-height: 1.7;
+            color: #334155;
+        }
+
+        .answer-block .label {
+            font-size: 0.92rem;
+            color: #64748B;
+            margin-bottom: 0.25rem;
+        }
+
+        .answer-block .answer-value {
+            color: #0F172A;
+            font-weight: 600;
+        }
+
+        .answer-explanation {
+            background: #F8FAFC;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 14px;
+            padding: 1rem;
+            color: #475569;
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #475569;
+        }
+
+        .empty-state h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (max-width: 960px) {
+            .summary-grid, .subject-summary {
+                grid-template-columns: 1fr 1fr;
+            }
+            .results-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .results-actions {
+                justify-content: center;
+            }
+            .results-body {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .summary-grid, .subject-summary {
+                grid-template-columns: 1fr;
+            }
+            .review-header {
+                grid-template-columns: 1fr;
+            }
+            .results-title {
+                font-size: 1.25rem;
+            }
+            .results-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .btn {
+                width: 100%;
+                padding: 0.875rem 1rem;
+            }
+            .summary-card {
+                padding: 1.25rem;
+            }
+            .summary-value {
+                font-size: 1.75rem;
+            }
+            .subject-tabs {
+                gap: 0.5rem;
+            }
+            .subject-tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+            .answer-item {
+                padding: 1rem;
+            }
+            .answer-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            .question-meta {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .results-body {
+                padding: 0 0.5rem;
+                margin: 1rem auto 2rem;
+            }
+            .results-title {
+                font-size: 1.1rem;
+            }
+            .summary-card {
+                padding: 1rem;
+            }
+            .summary-value {
+                font-size: 1.5rem;
+            }
+            .subject-tab {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            .answer-item {
+                padding: 0.75rem;
+            }
+            .question-text {
+                font-size: 0.9rem;
+            }
+            .option-item {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="results-header">
+        <div class="results-title">Test Analysis and Answer Review</div>
+        <div class="results-actions">
+            <button id="go-home-btn" class="btn btn-outline btn-pill" onclick="window.location.href='index.html'">Go Home</button>
+            <button id="return-test-btn" class="btn btn-outline btn-pill">Return to Test</button>
+            <button id="restart-test-btn" class="btn btn-primary btn-pill">Restart Test</button>
+        </div>
+    </header>
+
+    <main class="results-body">
+        <section class="summary-panel">
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <strong>Overall Correct</strong>
+                    <div class="summary-value" id="overall-correct">0</div>
+                </div>
+                <div class="summary-card">
+                    <strong>Attempted</strong>
+                    <div class="summary-value" id="overall-attempted">0</div>
+                </div>
+                <div class="summary-card">
+                    <strong>Unanswered</strong>
+                    <div class="summary-value" id="overall-unanswered">0</div>
+                </div>
+                <div class="summary-card">
+                    <strong>Flagged</strong>
+                    <div class="summary-value" id="overall-flagged">0</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="subject-results">
+            <div class="subject-tabs" id="subject-tabs"></div>
+            <div class="subject-summary" id="subject-summary"></div>
+        </section>
+
+        <section class="review-section">
+            <div class="review-header">
+                <div>
+                    <h2>Answer Review</h2>
+                    <p id="review-count" style="color:#c7d2fe; margin:0;">Showing all questions.</p>
+                </div>
+                <div class="review-status">
+                    <span class="status-pill correct">Correct</span>
+                    <span class="status-pill incorrect">Incorrect</span>
+                    <span class="status-pill unanswered">Unanswered</span>
+                </div>
+            </div>
+            <div class="answer-list" id="answer-list"></div>
+        </section>
+    </main>
+
+    <script>
+        const reviewState = JSON.parse(sessionStorage.getItem('liveTestReview') || 'null');
+        const returnTestBtn = document.getElementById('return-test-btn');
+        const restartTestBtn = document.getElementById('restart-test-btn');
+        const subjectTabs = document.getElementById('subject-tabs');
+        const subjectSummary = document.getElementById('subject-summary');
+        const answerList = document.getElementById('answer-list');
+        const reviewCount = document.getElementById('review-count');
+
+        returnTestBtn.addEventListener('click', () => {
+            window.location.href = 'test.html';
+        });
+
+        restartTestBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('liveTestReview');
+            window.location.href = 'test.html';
+        });
+
+        if (!reviewState) {
+            document.querySelector('.results-body').innerHTML = `
+                <div class="empty-state">
+                    <h2>No saved test results found</h2>
+                    <p>Start the test first, then click the finish button to see the full marks analysis and explanation.</p>
+                </div>
+            `;
+        } else {
+            fetch('questions.json')
+                .then(response => response.json())
+                .then(data => {
+                    let questions = Array.isArray(data) ? data : data.questions;
+                    
+                    // Normalize questions format
+                    questions = questions.map(q => {
+                        // Convert subject to uppercase
+                        const subject = q.subject ? q.subject.toUpperCase() : 'CHEMISTRY';
+                        
+                        // Find correct answer index based on answer text/value
+                        let correctAnswer = q.correctAnswer;
+                        if (correctAnswer === undefined && q.answer !== undefined) {
+                            // If answer is provided but not correctAnswer, find the index
+                            const answerValue = q.answer.toString();
+                            correctAnswer = q.options.findIndex(opt => opt.toString() === answerValue);
+                            if (correctAnswer === -1) {
+                                correctAnswer = 0; // fallback to first option
+                            }
+                        }
+                        
+                        return {
+                            ...q,
+                            subject,
+                            correctAnswer,
+                            id: q.id || Math.random()
+                        };
+                    });
+                    
+                    renderResults(questions);
+                })
+                .catch(error => {
+                    console.error(error);
+                    document.querySelector('.results-body').innerHTML = `
+                        <div class="empty-state">
+                            <h2>Unable to load question data</h2>
+                            <p>Please refresh the page or return to the test.</p>
+                        </div>
+                    `;
+                });
+        }
+
+        function renderResults(questions) {
+            const selectedAnswers = reviewState.selectedAnswers || {};
+            const flaggedSet = new Set(reviewState.flaggedQuestions || []);
+            const testedSubject = reviewState.currentSubject || 'ALL';
+
+            const questionStates = questions.map(question => {
+                // Normalize subject to UPPERCASE
+                const subject = question.subject ? question.subject.toUpperCase() : 'CHEMISTRY';
+                const userIndex = selectedAnswers[question.id];
+                const isAnswered = userIndex !== undefined;
+                const isCorrect = isAnswered && userIndex === question.correctAnswer;
+
+                return {
+                    ...question,
+                    subject,
+                    userIndex,
+                    userAnswer: isAnswered ? question.options[userIndex] : 'Not answered',
+                    correctAnswer: question.options[question.correctAnswer],
+                    status: !isAnswered ? 'unanswered' : isCorrect ? 'correct' : 'incorrect',
+                    flagged: flaggedSet.has(question.id),
+                    explanation: question.explanation || generateExplanation(question)
+                };
+            });
+
+            const subjects = [...new Set(questionStates.map(q => q.subject))];
+            const overall = {
+                total: questionStates.length,
+                correct: questionStates.filter(q => q.status === 'correct').length,
+                attempted: questionStates.filter(q => q.status !== 'unanswered').length,
+                unanswered: questionStates.filter(q => q.status === 'unanswered').length,
+                flagged: questionStates.filter(q => q.flagged).length
+            };
+
+            document.getElementById('overall-correct').textContent = `${overall.correct} / ${overall.total}`;
+            document.getElementById('overall-attempted').textContent = overall.attempted;
+            document.getElementById('overall-unanswered').textContent = overall.unanswered;
+            document.getElementById('overall-flagged').textContent = overall.flagged;
+
+            const subjectMetrics = subjects.map(subject => {
+                const group = questionStates.filter(q => q.subject === subject);
+                const correct = group.filter(q => q.status === 'correct').length;
+                return {
+                    subject,
+                    total: group.length,
+                    correct,
+                    attempted: group.filter(q => q.status !== 'unanswered').length,
+                    wrong: group.filter(q => q.status === 'incorrect').length
+                };
+            });
+
+            renderSubjectTabs(subjects, testedSubject);
+            renderSubjectSummary(subjectMetrics);
+            renderAnswerReview(questionStates, testedSubject);
+        }
+
+        function renderSubjectTabs(subjects, testedSubject) {
+            const allButton = document.createElement('button');
+            allButton.className = testedSubject === 'ALL' ? 'subject-tab active' : 'subject-tab';
+            allButton.textContent = 'ALL';
+            allButton.dataset.subject = 'ALL';
+            subjectTabs.appendChild(allButton);
+
+            allButton.addEventListener('click', () => selectSubjectFilter('ALL'));
+
+            subjects.forEach(subject => {
+                const button = document.createElement('button');
+                button.className = subject === testedSubject ? 'subject-tab active' : 'subject-tab';
+                button.textContent = formatSubjectName(subject);
+                button.dataset.subject = subject;
+                subjectTabs.appendChild(button);
+                button.addEventListener('click', () => selectSubjectFilter(subject));
+            });
+        }
+
+        function renderSubjectSummary(metrics) {
+            subjectSummary.innerHTML = '';
+            metrics.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'subject-card';
+                card.innerHTML = `
+                    <h3>${formatSubjectName(item.subject)}</h3>
+                    <p>${item.correct} correct out of ${item.total}</p>
+                    <p>${item.attempted} answered, ${item.wrong} wrong</p>
+                    <div class="subject-score">${item.correct}</div>
+                `;
+                subjectSummary.appendChild(card);
+            });
+        }
+
+        function renderAnswerReview(questionStates, filterSubject) {
+            const filtered = filterSubject === 'ALL'
+                ? questionStates
+                : questionStates.filter(q => q.subject === filterSubject);
+
+            console.log('Filter Subject:', filterSubject, 'Filtered Questions:', filtered.length, 'All Questions:', questionStates.length);
+            
+            answerList.innerHTML = '';
+            const displaySubject = filterSubject === 'ALL' ? '' : ' for ' + formatSubjectName(filterSubject);
+            reviewCount.textContent = `Showing ${filtered.length} question${filtered.length !== 1 ? 's' : ''}${displaySubject}`;
+
+            filtered.sort((a, b) => a.subject.localeCompare(b.subject) || a.id - b.id);
+
+            filtered.forEach((question, index) => {
+                const card = document.createElement('div');
+                card.className = 'answer-card';
+                card.innerHTML = `
+                    <h3>${formatSubjectName(question.subject)} • Q${question.id}</h3>
+                    <div class="answer-meta">
+                        <span><strong>Question:</strong> ${question.question}</span>
+                        <span class="badge ${question.status}">${question.status.toUpperCase()}</span>
+                    </div>
+                    <div class="answer-block">
+                        <p class="label">Your answer</p>
+                        <p class="answer-value">${question.userAnswer}</p>
+                    </div>
+                    <div class="answer-block">
+                        <p class="label">Correct answer</p>
+                        <p class="answer-value">${question.correctAnswer}</p>
+                    </div>
+                    <div class="answer-explanation"><strong>Explanation:</strong> ${question.explanation}</div>
+                `;
+                answerList.appendChild(card);
+            });
+        }
+
+        function selectSubjectFilter(subject) {
+            document.querySelectorAll('.subject-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.subject === subject);
+            });
+            fetch('questions1.json')
+                .then(response => response.json())
+                .then(data => {
+                    let questions = Array.isArray(data) ? data : data.questions;
+                    
+                    // Normalize questions format
+                    questions = questions.map(q => {
+                        // Convert subject to uppercase
+                        const subj = q.subject ? q.subject.toUpperCase() : 'CHEMISTRY';
+                        
+                        // Find correct answer index based on answer text/value
+                        let correctAnswer = q.correctAnswer;
+                        if (correctAnswer === undefined && q.answer !== undefined) {
+                            const answerValue = q.answer.toString();
+                            correctAnswer = q.options.findIndex(opt => opt.toString() === answerValue);
+                            if (correctAnswer === -1) {
+                                correctAnswer = 0;
+                            }
+                        }
+                        
+                        return {
+                            ...q,
+                            subject: subj,
+                            correctAnswer,
+                            id: q.id || Math.random()
+                        };
+                    });
+                    
+                    const selectedAnswers = reviewState.selectedAnswers || {};
+                    const flaggedSet = new Set(reviewState.flaggedQuestions || []);
+                    const questionStates = questions.map(question => ({
+                        ...question,
+                        userIndex: selectedAnswers[question.id],
+                        userAnswer: selectedAnswers[question.id] !== undefined ? question.options[selectedAnswers[question.id]] : 'Not answered',
+                        correctAnswer: question.options[question.correctAnswer],
+                        status: selectedAnswers[question.id] === undefined ? 'unanswered' : selectedAnswers[question.id] === question.correctAnswer ? 'correct' : 'incorrect',
+                        flagged: flaggedSet.has(question.id),
+                        explanation: question.explanation || generateExplanation(question)
+                    }));
+                    renderAnswerReview(questionStates, subject);
+                });
+        }
+
+        function generateExplanation(question) {
+            const base = `The correct answer is ${question.options[question.correctAnswer]}. `;
+            const chapter = question.chapter ? `This question is from the ${question.chapter} chapter.` : '';
+            return `${base}${chapter}`;
+        }
+        
+        function formatSubjectName(subject) {
+            const names = {
+                'MATHEMATICS': 'Mathematics',
+                'PHYSICS': 'Physics',
+                'CHEMISTRY': 'Chemistry'
+            };
+            return names[subject] || subject;
+        }
+    </script>
+</body>
+</html>

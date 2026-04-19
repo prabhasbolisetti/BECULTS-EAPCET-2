@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank Predictor - BECULTS.EAMCET</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    
+    <style>
+        .predictor-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            text-align: center;
+        }
+
+        .predictor-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .marks-input {
+            width: 100%;
+            max-width: 300px;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--color-lime);
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            text-align: center;
+            outline: none;
+            transition: all var(--transition-smooth);
+            margin-bottom: 2rem;
+        }
+
+        .marks-input:focus {
+            border-color: var(--color-lime);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Hide arrows in number input */
+        .marks-input::-webkit-outer-spin-button,
+        .marks-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .result-box {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+
+        .result-box.active {
+            display: block;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        .predicted-rank {
+            font-size: 4rem;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: #f97316;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-label {
+            color: #888;
+            font-size: 1rem;
+        }
+        
+    </style>
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh;">
+
+    <!-- Header / Nav -->
+    <header class="navbar" style="position: relative;">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">BECULTS.EAMCET</a>
+            
+            <nav class="center-nav">
+                <a href="index.html#hero">Home</a>
+                <a href="index.html#pyqs">PYQ's</a>
+                <a href="index.html#part-tests">Part Tests</a>
+                <a href="index.html#performance">Performance</a>
+                <a href="pricing.html">Pricing</a>
+            </nav>
+            
+            <div class="right-utils">
+                <a href="student-login.html" class="nav-link sign-in">Sign In</a>
+                <a href="student-login.html" class="btn btn-outline btn-pill">ride</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="flex-grow: 1;">
+        <div class="container predictor-container fade-in-up">
+            <div class="label-badge"><span class="dot" style="background:var(--color-lime); box-shadow: 0 0 8px var(--color-lime);"></span> Calculator</div>
+            <h2 class="section-heading" style="margin-bottom: 0.5rem;">rank predictor</h2>
+            <p style="color: #888;">Enter your mock test marks out of 160 to see your projected EAMCET rank.</p>
+            
+            <div class="predictor-card shadow">
+                <input type="number" id="marks-input" class="marks-input" placeholder="0 - 160" min="0" max="160">
+                
+                <div>
+                    <button id="predict-btn" class="btn btn-primary btn-pill btn-large">Calculate Expected Rank</button>
+                </div>
+
+                <div id="result-box" class="result-box">
+                    <div class="result-label">Your Estimated Rank Range is</div>
+                    <div id="rank-display" class="predicted-rank">--</div>
+                    <p style="color: #666; font-size: 0.875rem; margin-top: 1rem;">Based on historical normalization data.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" style="margin-top: auto; border-top: none; padding-top: 2rem;">
+        <div class="container footer-grid text-center">
+            <div class="footer-meta" style="border-top: none; padding-top: 0;">
+                <div class="contact-details">
+                    <p>Trishanth</p>
+                    <p>trishanth@becults.eamcet</p>
+                    <p>+91 94392 10321</p>
+                </div>
+                <div class="quick-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Legal</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('predict-btn').addEventListener('click', () => {
+            const marks = parseInt(document.getElementById('marks-input').value);
+            const resultBox = document.getElementById('result-box');
+            const display = document.getElementById('rank-display');
+
+            if (isNaN(marks) || marks < 0 || marks > 160) {
+                alert("Please enter a valid mark between 0 and 160.");
+                return;
+            }
+
+            // Simple mock prediction logic
+            let rank = "";
+            if (marks >= 150) rank = "1 - 100";
+            else if (marks >= 130) rank = "100 - 1k";
+            else if (marks >= 100) rank = "1k - 5k";
+            else if (marks >= 80) rank = "5k - 15k";
+            else if (marks >= 60) rank = "15k - 40k";
+            else if (marks >= 40) rank = "40k - 80k";
+            else rank = "80k+";
+
+            display.textContent = rank;
+            resultBox.classList.add('active');
+        });
+    </script>
+</body>
+</html>

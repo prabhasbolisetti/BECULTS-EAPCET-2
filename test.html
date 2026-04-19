@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Test - BECULTS.EAMCET</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    
+    <style>
+        body {
+            background-color: #F7F8FB;
+            color: #101827;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Test Header */
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: #FFFFFF;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+            color: #101827;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .test-logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #101827;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: monospace;
+            background: rgba(15, 23, 42, 0.06);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: #0F172A;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Mobile Question Map Toggle */
+        .map-toggle-btn {
+            display: none;
+            background: rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            color: #0F172A;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .map-toggle-btn:hover {
+            background: rgba(15, 23, 42, 0.1);
+            border-color: rgba(15, 23, 42, 0.18);
+        }
+
+        .map-toggle-btn.active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+
+        /* Mobile Question Map Overlay */
+        .question-map-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.2);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .question-map-overlay.active {
+            display: flex;
+        }
+
+        .question-map-mobile {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-width: 400px;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+        }
+
+        .question-map-overlay.active .question-map-mobile {
+            transform: translateY(0);
+        }
+
+        .map-mobile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .map-mobile-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .map-close-btn {
+            background: none;
+            border: none;
+            color: #475569;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .map-close-btn:hover {
+            color: #0F172A;
+            background: rgba(15, 23, 42, 0.05);
+        }
+
+        .map-mobile-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Test Progress Bar */
+        .test-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: #FFFFFF;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .flag-count {
+            color: #f97316;
+            background: rgba(249, 115, 22, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+        }
+
+        /* Layout */
+        .test-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            padding: 2rem;
+            flex-grow: 1;
+            max-width: 1320px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Main Question Area */
+        .question-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.06);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.04);
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .subject-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        .question-number {
+            background: rgba(15, 23, 42, 0.05);
+            color: #0F172A;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .question-body {
+            padding: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            color: #334155;
+        }
+
+        .flag-btn {
+            background: #F8FAFC;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            color: #475569;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flag-btn:hover {
+            color: #f97316;
+            border-color: #f97316;
+            background: rgba(249, 115, 22, 0.08);
+        }
+
+        /* Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: #F8FAFC;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: center;
+            justify-content: center;
+            color: #0F172A;
+        }
+
+        .option-item:hover {
+            background: #EFF6FF;
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .option-item.selected {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: #10b981;
+        }
+
+        /* Sidebar Navigation */
+
+
+        /* Lower Nav */
+        .test-footer-nav {
+            margin-top: auto;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(15, 23, 42, 0.08);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        /* Question Map Panel */
+        .question-map-container {
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 180px);
+            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.06);
+        }
+
+        .result-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 999;
+        }
+
+        .result-panel {
+            width: min(760px, 100%);
+            background: #FFFFFF;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 25px 80px rgba(15, 23, 42, 0.16);
+        }
+
+        .result-panel h2 {
+            margin: 0 0 1rem;
+            color: #0F172A;
+            font-size: 1.75rem;
+        }
+
+        .result-summary {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: #F8FAFC;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .result-card strong {
+            color: #0F172A;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-card span {
+            color: #64748B;
+            font-size: 0.95rem;
+        }
+
+
+        .map-subject-tabs {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            justify-content: space-between;
+        }
+
+        .map-subject-button {
+            flex: 1;
+            padding: 0.85rem 1.2rem;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            border-radius: 14px;
+            color: #0F172A;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .map-subject-button:hover {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .map-subject-button.active {
+            background: rgba(16, 185, 129, 0.18);
+            border-color: #10b981;
+            color: #0F172A;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.18);
+        }
+
+        .question-map-scroll {
+            overflow-y: auto;
+            max-height: calc(100vh - 300px);
+            padding-right: 0.25rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(107, 114, 128, 0.35) rgba(241, 245, 249, 0.95);
+        }
+
+        .question-map-scroll::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .question-map-scroll::-webkit-scrollbar-track {
+            background: rgba(241, 245, 249, 0.9);
+            border-radius: 999px;
+        }
+
+        .question-map-scroll::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 999px;
+            border: 2px solid rgba(241, 245, 249, 0.9);
+        }
+
+        .question-map-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .question-group-label {
+            color: #aaa;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .map-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.not-visited {
+            background: rgba(15, 23, 42, 0.06);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+        }
+
+        .legend-dot.unanswered {
+            background: #fbbf24;
+        }
+
+        .legend-dot.answered {
+            background: #3b82f6;
+        }
+
+        .legend-dot.current {
+            background: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+        }
+
+        .legend-dot.flagged {
+            background: #f97316;
+        }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+
+        .question-btn {
+            width: 100%;
+            aspect-ratio: 1;
+            padding: 0;
+            border: 2px solid rgba(15, 23, 42, 0.12);
+            background: rgba(241, 245, 249, 0.9);
+            border-radius: 8px;
+            color: #0F172A;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .question-btn:hover {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .question-btn.not-visited {
+            background: #F1F5F9;
+            border-color: rgba(15, 23, 42, 0.08);
+            color: #475569;
+        }
+
+        .question-btn.unanswered {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        .question-btn.answered {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .question-btn.current {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: #10b981;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .question-btn.flagged::after {
+            content: "🚩";
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .test-layout {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            .header-left {
+                gap: 0.5rem;
+            }
+            .question-map-container {
+                display: none;
+            }
+            .map-toggle-btn {
+                display: flex;
+            }
+            .test-header {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            .header-left {
+                order: 1;
+                flex: 1;
+            }
+            .test-logo {
+                order: 2;
+                font-size: 1rem;
+            }
+            .header-actions {
+                order: 3;
+                gap: 0.5rem;
+            }
+            .test-progress {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
+            .question-card {
+                border-radius: 12px;
+            }
+            .question-header {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .subject-title {
+                font-size: 1rem;
+            }
+            .question-number {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .question-body {
+                padding: 1.5rem;
+            }
+            .question-text {
+                font-size: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            .flag-btn {
+                padding: 0.6rem;
+                font-size: 0.9rem;
+            }
+            .options-list {
+                gap: 0.75rem;
+            }
+            .option-item {
+                padding: 1rem 1.5rem;
+                font-size: 0.95rem;
+                min-height: 48px;
+            }
+            .test-footer-nav {
+                padding: 1rem;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            .result-overlay {
+                padding: 1rem;
+            }
+            .result-panel {
+                padding: 1.5rem;
+            }
+            .result-panel h2 {
+                font-size: 1.5rem;
+            }
+            .result-card {
+                padding: 1rem;
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            .map-subject-tabs {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            .map-subject-button {
+                padding: 0.7rem 1rem;
+                font-size: 0.8rem;
+            }
+            .question-grid {
+                grid-template-columns: repeat(6, 1fr);
+                gap: 0.5rem;
+            }
+            .question-btn {
+                font-size: 0.8rem;
+                border-radius: 6px;
+            }
+            .timer {
+                font-size: 1rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .author-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .test-layout {
+                padding: 0.5rem;
+            }
+            .test-header {
+                padding: 0.75rem;
+            }
+            .question-body {
+                padding: 1rem;
+            }
+            .question-text {
+                font-size: 0.9rem;
+            }
+            .option-item {
+                padding: 0.875rem 1rem;
+                font-size: 0.9rem;
+            }
+            .question-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            .result-panel {
+                padding: 1rem;
+            }
+            .result-panel h2 {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .question-map-overlay {
+                padding: 0.5rem;
+            }
+            .question-map-mobile {
+                max-width: 100%;
+                max-height: 80vh;
+                border-radius: 12px 12px 0 0;
+            }
+            .map-mobile-header {
+                padding: 0.75rem 1rem;
+            }
+            .map-mobile-title {
+                font-size: 1rem;
+            }
+            .map-mobile-content {
+                padding: 1rem;
+            }
+            .map-subject-tabs {
+                gap: 0.25rem;
+            }
+            .map-subject-button {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            .question-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.25rem;
+            }
+            .question-btn {
+                font-size: 0.75rem;
+                min-height: 32px;
+            }
+            .legend-item {
+                font-size: 0.75rem;
+            }
+            .legend-dot {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Test Header -->
+    <header class="test-header">
+        <div class="header-left">
+            <a href="index.html" class="btn btn-outline btn-pill" style="padding: 0.5rem 1.5rem; color: #475569; border-color: rgba(15,23,42,0.14);">? Back</a>
+            <div class="timer" id="test-timer">
+                ? 03:00:00
+            </div>
+        </div>
+        
+        <div class="test-logo">BECULTS.EAMCET</div>
+
+        <div class="header-actions">
+            <button id="map-toggle-btn" class="map-toggle-btn" title="Question Map">📋</button>
+            <div class="author-avatar" style="background: #E2E8F0; color: #0F172A; border: 1px solid rgba(15,23,42,0.14);">R</div>
+            <button id="finish-test-btn" class="btn btn-primary btn-pill" style="background: #f97316; color: white;">Finish Test</button>
+        </div>
+    </header>
+
+    <div class="test-progress">
+        <span id="progress-text">0/160 Answered</span>
+        <span class="flag-count" id="flag-text">0 Flagged</span>
+    </div>
+
+    <!-- Main Layout -->
+    <main class="test-layout fade-in-up">
+        
+        <div class="question-container">
+            <div class="question-card">
+                <div class="question-header">
+                    <div class="subject-title">MATHS (80 Qs)</div>
+                    <div class="question-number">Q 1 / 80</div>
+                </div>
+                
+                <div class="question-body">
+                    <div class="question-text">
+                        <div>The cross product <em>a &times; b</em> gives a vector:</div>
+                        <button class="flag-btn" title="Flag for Review">
+                            <span style="font-size: 1.25rem;">?</span>
+                        </button>
+                    </div>
+                    
+                    <div class="options-list">
+                        <div class="option-item">Parallel to both a and b</div>
+                        <div class="option-item">Perpendicular to both a and b</div>
+                        <div class="option-item">In the plane of a and b</div>
+                        <div class="option-item">Of zero magnitude always</div>
+                    </div>
+                </div>
+                
+                <div class="test-footer-nav">
+                    <button class="btn btn-outline btn-pill" style="border-color: rgba(255,255,255,0.2); color: #aaa;">Previous</button>
+                    <button class="btn btn-primary btn-pill">Save & Next</button>
+                </div>
+            </div>
+        </div>
+
+        <aside class="question-map-container fade-in-up delay-1">
+            <div class="map-subject-tabs" id="map-subject-tabs">
+                <button class="map-subject-button" data-subject="MATHS">MATHS</button>
+                <button class="map-subject-button" data-subject="PHYSICS">PHYSICS</button>
+                <button class="map-subject-button active" data-subject="CHEMISTRY">CHEMISTRY</button>
+            </div>
+            
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-dot not-visited"></div>
+                    <span>Not Visited</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot unanswered"></div>
+                    <span>Un-answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot answered"></div>
+                    <span>Answered</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot current"></div>
+                    <span>Current</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot flagged"></div>
+                    <span>Flagged</span>
+                </div>
+            </div>
+            
+            <div class="question-map-scroll">
+                <div class="question-grid-wrapper" id="question-grid"></div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- Mobile Question Map Overlay -->
+    <div id="question-map-overlay" class="question-map-overlay">
+        <div class="question-map-mobile">
+            <div class="map-mobile-header">
+                <div class="map-mobile-title">Question Map</div>
+                <button id="map-close-btn" class="map-close-btn">&times;</button>
+            </div>
+            <div class="map-mobile-content">
+                <div class="map-subject-tabs" id="map-mobile-subject-tabs">
+                    <button class="map-subject-button" data-subject="MATHS">MATHS</button>
+                    <button class="map-subject-button" data-subject="PHYSICS">PHYSICS</button>
+                    <button class="map-subject-button active" data-subject="CHEMISTRY">CHEMISTRY</button>
+                </div>
+                
+                <div class="map-legend">
+                    <div class="legend-item">
+                        <div class="legend-dot not-visited"></div>
+                        <span>Not Visited</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot unanswered"></div>
+                        <span>Un-answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot answered"></div>
+                        <span>Answered</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot current"></div>
+                        <span>Current</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot flagged"></div>
+                        <span>Flagged</span>
+                    </div>
+                </div>
+                
+                <div class="question-map-scroll">
+                    <div class="question-grid-wrapper" id="question-mobile-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Security Check: Redirect if no session exists
+        if (!localStorage.getItem('becults_user')) {
+            window.location.href = 'student-login.html';
+            throw new Error("Authentication required");
+        }
+
+        // Test Interface Logic
+        let allQuestions = [];
+        let currentSubject = 'CHEMISTRY';
+        let currentQuestionIndex = 0;
+        let selectedAnswers = {};
+        let flaggedQuestions = new Set();
+        let selectedChapterFilters = [];
+        let totalSeconds = 3 * 60 * 60; // 3 hours
+        const timerElement = document.getElementById('test-timer');
+        
+        // Display name mapping for subjects
+        const subjectDisplayNames = {
+            'MATHEMATICS': 'Mathematics',
+            'PHYSICS': 'Physics',
+            'CHEMISTRY': 'Chemistry'
+        };
+
+        // Load questions from JSON
+        fetch('questions.json')
+            .then(response => response.json())
+            .then(data => {
+                let questions = Array.isArray(data) ? data : data.questions;
+                
+                // Normalize questions format
+                allQuestions = questions.map(q => {
+                    // Convert subject to uppercase
+                    const subject = q.subject ? q.subject.toUpperCase() : 'CHEMISTRY';
+                    
+                    // Find correct answer index based on answer text/value
+                    let correctAnswer = q.correctAnswer;
+                    if (correctAnswer === undefined && q.answer !== undefined) {
+                        // If answer is provided but not correctAnswer, find the index
+                        const answerValue = q.answer.toString();
+                        correctAnswer = q.options.findIndex(opt => opt.toString() === answerValue);
+                        if (correctAnswer === -1) {
+                            correctAnswer = 0; // fallback to first option
+                        }
+                    }
+                    
+                    return {
+                        ...q,
+                        subject,
+                        correctAnswer,
+                        id: q.id || Math.random()
+                    };
+                });
+
+                const params = new URLSearchParams(window.location.search);
+                const subjectParam = params.get('subject') ? params.get('subject').toUpperCase() : null;
+                const chaptersParam = params.get('chapters');
+                if (chaptersParam) {
+                    try {
+                        const decodedChapters = JSON.parse(decodeURIComponent(chaptersParam));
+                        selectedChapterFilters = Array.isArray(decodedChapters)
+                            ? decodedChapters.map(item => item.trim()).filter(Boolean)
+                            : [];
+                    } catch (error) {
+                        console.warn('Unable to parse chapter filter:', error);
+                        selectedChapterFilters = [];
+                    }
+                }
+
+                if (subjectParam && selectedChapterFilters.length) {
+                    const filteredQuestions = allQuestions.filter(q => q.subject === subjectParam && selectedChapterFilters.includes(q.chapter));
+                    if (filteredQuestions.length > 0) {
+                        allQuestions = filteredQuestions;
+                    } else {
+                        // If no questions match the selected chapters, keep full list so user can still view available questions.
+                        console.warn('No questions found for selected chapters:', selectedChapterFilters);
+                    }
+                }
+
+                function shuffleArray(array) {
+                    const result = array.slice();
+                    for (let i = result.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [result[i], result[j]] = [result[j], result[i]];
+                    }
+                    return result;
+                }
+
+                function selectRandomTestQuestions(questions) {
+                    const desiredCounts = {
+                        'PHYSICS': 40,
+                        'CHEMISTRY': 40,
+                        'MATHEMATICS': 80
+                    };
+
+                    const selected = [];
+                    const selectedIds = new Set();
+
+                    Object.entries(desiredCounts).forEach(([subject, count]) => {
+                        const subjectPool = questions.filter(q => q.subject === subject);
+                        const sample = shuffleArray(subjectPool).slice(0, Math.min(count, subjectPool.length));
+                        sample.forEach(q => {
+                            selected.push(q);
+                            selectedIds.add(q.id);
+                        });
+                    });
+
+                    const remainingQuestions = shuffleArray(questions.filter(q => !selectedIds.has(q.id)));
+                    const remainingSlots = Math.max(0, 160 - selected.length);
+                    selected.push(...remainingQuestions.slice(0, remainingSlots));
+
+                    // If we still don't have 160, just return what we have.
+                    const finalSelection = selected.length > 160 ? selected.slice(0, 160) : selected;
+
+                    return shuffleArray(finalSelection);
+                }
+
+                if (allQuestions.length > 160) {
+                    allQuestions = selectRandomTestQuestions(allQuestions);
+                }
+
+                initializeTest(subjectParam);
+            })
+            .catch(error => console.error('Error loading questions:', error));
+
+        function initializeTest(subjectParam = null) {
+            // Get list of available subjects from loaded questions
+            const availableSubjects = [...new Set(allQuestions.map(q => q.subject))];
+            
+            if (availableSubjects.length === 0) {
+                document.querySelector('.subject-title').textContent = 'No questions available';
+                document.querySelector('.question-number').textContent = '';
+                document.querySelector('.question-text div').innerHTML = 'No questions match the selected subject and chapters.';
+                document.querySelector('.options-list').innerHTML = '';
+                return;
+            }
+
+            // Generate subject tabs dynamically
+            const tabsContainer = document.getElementById('map-subject-tabs');
+            tabsContainer.innerHTML = '';
+            
+            availableSubjects.forEach((subject, index) => {
+                const button = document.createElement('button');
+                button.className = `map-subject-button ${index === 0 ? 'active' : ''}`;
+                button.setAttribute('data-subject', subject);
+                button.textContent = subject.substring(0, 3).toUpperCase();
+                
+                button.addEventListener('click', () => {
+                    currentSubject = subject;
+                    currentQuestionIndex = 0;
+                    setActiveMapSubject(subject);
+                    displayQuestion();
+                    updateProgress();
+                });
+                
+                tabsContainer.appendChild(button);
+            });
+            
+            // Default to Chemistry when available; ignore URL params on refresh so the first Chemistry question is always shown.
+            const params = new URLSearchParams(window.location.search);
+            const urlSubject = subjectParam || (params.get('subject') ? params.get('subject').toUpperCase() : null);
+            const availableDefault = availableSubjects.includes(urlSubject) ? urlSubject : (availableSubjects.includes('CHEMISTRY') ? 'CHEMISTRY' : availableSubjects[0]);
+            currentSubject = availableDefault;
+            currentQuestionIndex = 0;
+            setActiveMapSubject(currentSubject);
+            displayQuestion();
+            updateProgress();
+        }
+
+        function setActiveMapSubject(subject) {
+            const buttons = document.querySelectorAll('.map-subject-button');
+            buttons.forEach(button => {
+                if (button.dataset.subject === subject) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function setupSubjectTabs() {
+            document.querySelectorAll('.map-subject-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const selectedSubject = button.dataset.subject;
+                    if (selectedSubject === currentSubject) return;
+                    currentSubject = selectedSubject;
+                    currentQuestionIndex = 0;
+                    setActiveMapSubject(selectedSubject);
+                    displayQuestion();
+                    updateProgress();
+                });
+            });
+        }
+
+        function getCurrentSubjectQuestions() {
+            return allQuestions.filter(q => q.subject === currentSubject);
+        }
+
+        function displayQuestion() {
+            const subjectQuestions = getCurrentSubjectQuestions();
+            
+            if (currentQuestionIndex >= subjectQuestions.length) {
+                currentQuestionIndex = subjectQuestions.length - 1;
+            }
+            
+            const question = subjectQuestions[currentQuestionIndex];
+            
+            // Update header
+            const qCount = subjectQuestions.length;
+            const displayName = subjectDisplayNames[currentSubject] || currentSubject;
+            document.querySelector('.subject-title').textContent = `${displayName} (${qCount} Qs)`;
+            document.querySelector('.question-number').textContent = `Q ${currentQuestionIndex + 1} / ${qCount}`;
+            
+            // Update question text
+            document.querySelector('.question-text div').innerHTML = question.question;
+            
+            // Update options
+            const optionsList = document.querySelector('.options-list');
+            optionsList.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-item';
+                optionDiv.innerHTML = option;
+                
+                // Check if this option is already selected
+                if (selectedAnswers[question.id] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.addEventListener('click', () => {
+                    // Remove selected from all options
+                    document.querySelectorAll('.option-item').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                    
+                    // Add selected to clicked option
+                    optionDiv.classList.add('selected');
+                    
+                    // Save answer
+                    selectedAnswers[question.id] = index;
+                    updateProgress();
+                    updateQuestionMap();
+                });
+                
+                optionsList.appendChild(optionDiv);
+            });
+            
+            // Update flag button
+            const flagBtn = document.querySelector('.flag-btn');
+            if (flaggedQuestions.has(question.id)) {
+                flagBtn.style.color = '#f97316';
+                flagBtn.style.borderColor = '#f97316';
+            } else {
+                flagBtn.style.color = '#475569';
+                flagBtn.style.borderColor = 'rgba(15, 23, 42, 0.14)';
+            }
+            
+            flagBtn.onclick = () => {
+                if (flaggedQuestions.has(question.id)) {
+                    flaggedQuestions.delete(question.id);
+                    flagBtn.style.color = '#475569';
+                    flagBtn.style.borderColor = 'rgba(15, 23, 42, 0.14)';
+                } else {
+                    flaggedQuestions.add(question.id);
+                    flagBtn.style.color = '#f97316';
+                    flagBtn.style.borderColor = '#f97316';
+                }
+                updateProgress();
+                updateQuestionMap();
+            };
+            
+            // Update navigation buttons
+            const prevBtn = document.querySelector('.test-footer-nav .btn-outline');
+            const nextBtn = document.querySelector('.test-footer-nav .btn-primary');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            prevBtn.style.opacity = currentQuestionIndex === 0 ? '0.5' : '1';
+            prevBtn.style.cursor = currentQuestionIndex === 0 ? 'not-allowed' : 'pointer';
+            
+            prevBtn.onclick = (e) => {
+                e.preventDefault();
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    displayQuestion();
+                }
+            };
+            
+            nextBtn.onclick = (e) => {
+                e.preventDefault();
+                if (currentQuestionIndex < subjectQuestions.length - 1) {
+                    currentQuestionIndex++;
+                    displayQuestion();
+                } else {
+                    // Last question reached
+                    alert('You have reached the last question!');
+                }
+            };
+
+            // Update question map
+            updateQuestionMap();
+        }
+
+        function updateQuestionMap() {
+            const subjectQuestions = getCurrentSubjectQuestions();
+            const gridContainer = document.getElementById('question-grid');
+            gridContainer.innerHTML = '';
+            
+            const groupSize = 20;
+            const groupCount = Math.ceil(subjectQuestions.length / groupSize);
+            
+            for (let group = 0; group < groupCount; group++) {
+                const groupStart = group * groupSize;
+                const groupEnd = Math.min(groupStart + groupSize, subjectQuestions.length);
+                const groupBlock = document.createElement('div');
+                groupBlock.className = 'question-map-group';
+                
+                const groupLabel = document.createElement('div');
+                groupLabel.className = 'question-group-label';
+                groupLabel.textContent = `${groupStart + 1} - ${groupEnd}`;
+                groupBlock.appendChild(groupLabel);
+                
+                const innerGrid = document.createElement('div');
+                innerGrid.className = 'question-grid';
+                
+                for (let index = groupStart; index < groupEnd; index++) {
+                    const question = subjectQuestions[index];
+                    const btn = document.createElement('button');
+                    btn.className = 'question-btn';
+                    btn.textContent = index + 1;
+                    btn.setAttribute('data-index', index);
+                    
+                    if (index === currentQuestionIndex) {
+                        btn.classList.add('current');
+                    } else if (flaggedQuestions.has(question.id)) {
+                        btn.classList.add('flagged');
+                        if (selectedAnswers[question.id] !== undefined) {
+                            btn.classList.add('answered');
+                        } else {
+                            btn.classList.add('unanswered');
+                        }
+                    } else if (selectedAnswers[question.id] !== undefined) {
+                        btn.classList.add('answered');
+                    } else {
+                        btn.classList.add('not-visited');
+                    }
+                    
+                    btn.addEventListener('click', () => {
+                        currentQuestionIndex = index;
+                        displayQuestion();
+                        window.scrollTo(0, 0);
+                    });
+                    
+                    innerGrid.appendChild(btn);
+                }
+                
+                groupBlock.appendChild(innerGrid);
+                gridContainer.appendChild(groupBlock);
+            }
+            
+            // Update mobile map if overlay is open
+            if (mapOverlay && mapOverlay.classList.contains('active')) {
+                updateMobileQuestionMap();
+            }
+        }
+
+        function updateProgress() {
+            const currentQuestions = getCurrentSubjectQuestions();
+            const totalAnswered = currentQuestions.filter(q => selectedAnswers[q.id] !== undefined).length;
+            const flagCount = flaggedQuestions.size;
+            const totalQuestions = currentQuestions.length;
+            
+            // Update header progress
+            document.getElementById('progress-text').textContent = `${totalAnswered}/${totalQuestions} Answered`;
+            document.getElementById('flag-text').textContent = `${flagCount} Flagged`;
+        }
+
+        function calculateResults() {
+            const subjectGroups = {};
+            allQuestions.forEach(q => {
+                if (!subjectGroups[q.subject]) {
+                    subjectGroups[q.subject] = [];
+                }
+                subjectGroups[q.subject].push(q);
+            });
+
+            return Object.entries(subjectGroups).map(([subject, questions]) => {
+                const total = questions.length;
+                const correct = questions.filter(q => selectedAnswers[q.id] === q.correctAnswer).length;
+                const attempted = questions.filter(q => selectedAnswers[q.id] !== undefined).length;
+                const wrong = attempted - correct;
+                return { subject, total, correct, attempted, wrong };
+            });
+        }
+
+        function displayResults() {
+            const resultOverlay = document.getElementById('result-overlay');
+            const summaryContainer = document.getElementById('result-summary');
+            const results = calculateResults();
+            summaryContainer.innerHTML = '';
+
+            const totalScore = results.reduce((sum, item) => sum + item.correct, 0);
+            const totalQuestions = allQuestions.length;
+
+            const overallCard = document.createElement('div');
+            overallCard.className = 'result-card';
+            overallCard.innerHTML = `
+                <div>
+                    <strong>Overall Score</strong>
+                    <span>${totalScore} / ${totalQuestions} correct</span>
+                </div>
+                <div class="result-score">${totalScore}</div>
+            `;
+            summaryContainer.appendChild(overallCard);
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+                card.innerHTML = `
+                    <div>
+                        <strong>${result.subject}</strong>
+                        <span>${result.correct} correct of ${result.total} (${result.attempted} attempted, ${result.wrong} wrong)</span>
+                    </div>
+                    <div class="result-score">${result.correct}</div>
+                `;
+                summaryContainer.appendChild(card);
+            });
+
+            resultOverlay.style.display = 'flex';
+        }
+
+        function saveTestReviewState() {
+            const reviewState = {
+                selectedAnswers,
+                flaggedQuestions: Array.from(flaggedQuestions),
+                allQuestions,
+                currentSubject,
+                timestamp: Date.now()
+            };
+            sessionStorage.setItem('liveTestReview', JSON.stringify(reviewState));
+        }
+
+        document.getElementById('finish-test-btn').addEventListener('click', event => {
+            event.preventDefault();
+            saveTestReviewState();
+            window.location.href = 'results.html';
+        });
+
+        // Mobile Question Map Toggle
+        const mapToggleBtn = document.getElementById('map-toggle-btn');
+        const mapOverlay = document.getElementById('question-map-overlay');
+        const mapCloseBtn = document.getElementById('map-close-btn');
+
+        if (mapToggleBtn && mapOverlay) {
+            mapToggleBtn.addEventListener('click', () => {
+                mapOverlay.classList.add('active');
+                mapToggleBtn.classList.add('active');
+                // Update mobile map content
+                updateMobileQuestionMap();
+                // Attach listeners
+                attachMobileMapListeners();
+            });
+
+            mapCloseBtn.addEventListener('click', () => {
+                mapOverlay.classList.remove('active');
+                mapToggleBtn.classList.remove('active');
+            });
+
+            // Close on overlay click
+            mapOverlay.addEventListener('click', (e) => {
+                if (e.target === mapOverlay) {
+                    mapOverlay.classList.remove('active');
+                    mapToggleBtn.classList.remove('active');
+                }
+            });
+        }
+
+        // Mobile Question Map event handlers
+        function attachMobileMapListeners() {
+            const mobileGrid = document.getElementById('question-mobile-grid');
+            const tabContainer = document.getElementById('map-mobile-subject-tabs');
+            
+            if (!mobileGrid || !tabContainer) return;
+            
+            // Handle question button clicks with event delegation
+            mobileGrid.addEventListener('click', handleMobileQuestionClick, true);
+            
+            // Handle tab clicks with event delegation
+            tabContainer.addEventListener('click', handleMobileTabClick, true);
+        }
+
+        function handleMobileQuestionClick(e) {
+            if (e.target.classList && e.target.classList.contains('question-btn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const questionIndex = parseInt(e.target.getAttribute('data-index'));
+                if (!isNaN(questionIndex)) {
+                    currentQuestionIndex = questionIndex;
+                    displayQuestion();
+                    mapOverlay.classList.remove('active');
+                    mapToggleBtn.classList.remove('active');
+                    window.scrollTo(0, 0);
+                }
+            }
+        }
+
+        function handleMobileTabClick(e) {
+            if (e.target.classList && e.target.classList.contains('map-subject-button')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const subject = e.target.getAttribute('data-subject');
+                if (subject) {
+                    // Find and click the corresponding desktop tab
+                    const desktopTab = document.querySelector(`#map-subject-tabs .map-subject-button[data-subject="${subject}"]`);
+                    if (desktopTab) {
+                        desktopTab.click();
+                        setTimeout(() => {
+                            updateMobileQuestionMap();
+                        }, 150);
+                    }
+                }
+            }
+        }
+
+        function updateMobileQuestionMap() {
+            const mobileGrid = document.getElementById('question-mobile-grid');
+            const mobileTabs = document.getElementById('map-mobile-subject-tabs');
+            
+            if (!mobileGrid || !mobileTabs) return;
+            
+            // Copy the current subject tabs state
+            const desktopTabs = document.querySelectorAll('#map-subject-tabs .map-subject-button');
+            const mobileTabButtons = mobileTabs.querySelectorAll('.map-subject-button');
+            
+            desktopTabs.forEach((tab, index) => {
+                if (mobileTabButtons[index]) {
+                    if (tab.classList.contains('active')) {
+                        mobileTabButtons[index].classList.add('active');
+                    } else {
+                        mobileTabButtons[index].classList.remove('active');
+                    }
+                }
+            });
+            
+            // Copy the current grid content
+            const desktopGrid = document.getElementById('question-grid');
+            if (desktopGrid) {
+                mobileGrid.innerHTML = desktopGrid.innerHTML;
+            }
+        }
+
+        // Start 3 Hour Timer
+        function updateTimer() {
+            if (totalSeconds <= 0) {
+                timerElement.innerHTML = '⏱ 00:00:00';
+                return;
+            }
+            
+            const h = Math.floor(totalSeconds / 3600);
+            const m = Math.floor((totalSeconds % 3600) / 60);
+            const s = totalSeconds % 60;
+            
+            timerElement.innerHTML = `⏱ ${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            totalSeconds--;
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+    </script>
+</body>
+</html>

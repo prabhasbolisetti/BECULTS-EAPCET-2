@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part Tests - BECULTS.EAMCET</title>
+    <meta name="description" content="Premium EAMCET preparation platform. Pyq's, part tests, and performance metrics.">
+
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Outfit for heavy titles, Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+    <!-- Header / Nav -->
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="index.html" class="logo">BECULTS.EAMCET</a>
+            
+            <nav class="center-nav">
+                <a href="index.html#hero">Home</a>
+                <a href="index.html#pyqs">PYQ's</a>
+                <a href="index.html#part-tests">Part Tests</a>
+                <a href="index.html#performance">Performance</a>
+                <a href="pricing.html">Pricing</a>
+            </nav>
+            
+            <div class="right-utils">
+                <a href="student-login.html" class="nav-link sign-in">Sign In</a>
+                <a href="student-login.html" class="btn btn-outline btn-pill">ride</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding-top: var(--nav-height);">
+        <!-- Part Tests Section (Dark/Glass) -->
+        <section id="part-tests" class="section part-tests-section">
+            <!-- Main View -->
+            <div id="main-view">
+                <div class="container">
+                    <div class="text-center fade-in-up">
+                        <div class="label-badge"><span class="dot"></span> Preparation</div>
+                        <h2 class="section-heading">part tests</h2>
+                    </div>
+                    
+                    <div class="subjects-grid fade-in-up delay-1" id="subjects-grid">
+                        <!-- Subjects will be loaded dynamically from questions.json -->
+                    </div>
+                </div>
+
+                <!-- Inter Chapters Marquee -->
+                <div class="marquee-wrapper fade-in-up delay-2">
+                    <div class="marquee" id="marquee-track">
+                        <!-- JavaScript will populate and clone this -->
+                    </div>
+                </div>
+
+                <div class="container text-center test-action-area fade-in-up delay-3">
+                    <button id="create-test-btn" class="btn btn-primary btn-pill btn-large">Test</button>
+                </div>
+            </div>
+
+            <!-- Questions View -->
+            <div id="questions-view" class="questions-view hidden">
+                <div class="container questions-container">
+                    <div class="questions-header">
+                        <button id="back-btn" class="btn btn-outline" style="border-color: rgba(255,255,255,0.2); color: #aaa;">← Back</button>
+                        <h2 id="subject-title" class="section-heading" style="margin: 0;">Maths</h2>
+                        <div style="width: 80px;"></div>
+                    </div>
+
+                    <div id="questions-list" class="questions-list">
+                        <!-- Questions will be populated here -->
+                    </div>
+
+                    <div class="submission-area">
+                        <button id="submit-btn" class="btn btn-primary btn-pill btn-large">Submit Test</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results View -->
+            <div id="results-view" class="results-view hidden">
+                <div class="container results-container">
+                    <div class="text-center">
+                        <div class="label-badge"><span class="dot"></span> Results</div>
+                        <h2 class="section-heading">test results</h2>
+                    </div>
+
+                    <div class="results-card">
+                        <div class="score-display">
+                            <div class="score-circle">
+                                <span id="score-value" class="score-text">0</span>
+                                <span class="score-label">out of <span id="total-questions">15</span></span>
+                            </div>
+                            <div class="score-percentage">
+                                <span id="percentage-value">0</span>%
+                            </div>
+                        </div>
+
+                        <div class="results-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Correct</span>
+                                <span class="breakdown-value correct" id="correct-count">0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Incorrect</span>
+                                <span class="breakdown-value incorrect" id="incorrect-count">0</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Unanswered</span>
+                                <span class="breakdown-value unanswered" id="unanswered-count">0</span>
+                            </div>
+                        </div>
+
+                        <div id="answer-review" class="answer-review">
+                            <!-- Individual answers will be shown here -->
+                        </div>
+                    </div>
+
+                    <div class="results-actions text-center">
+                        <button id="retake-btn" class="btn btn-primary btn-pill btn-large">Retake Test</button>
+                        <button id="home-btn" class="btn btn-outline btn-pill btn-large" style="border-color: rgba(255,255,255,0.2); color: #aaa;">Go Home</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Dark) -->
+    <footer class="site-footer">
+        <div class="container footer-grid text-center">
+            
+            <div class="footer-center fade-in-up">
+                <div class="label-badge"><span class="dot"></span> Pricing</div>
+                <h2 class="footer-offer">Save up to 50% on EAMCET mock tests</h2>
+                <div class="footer-cta">
+                    <a href="pricing.html" class="btn btn-primary btn-pill btn-large">Claim Offer</a>
+                </div>
+                
+                <div class="footer-meta">
+                    <div class="contact-details">
+                        <p>Trishanth</p>
+                        <p>trishanth@becults.eamcet</p>
+                        <p>+91 94392 10321</p>
+                    </div>
+                    <div class="quick-links">
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Legal</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- Overlay / Modal for Test Generation -->
+    <div id="test-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="loader"></div>
+            <h3 class="modal-title">Creating your part test...</h3>
+            <p class="modal-desc">Selecting ideal questions based on your performance in Algebra and Mechanics.</p>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script>
+        // Load subjects dynamically from questions.json
+        fetch('questions.json')
+            .then(response => response.json())
+            .then(data => {
+                let questions = Array.isArray(data) ? data : data.questions;
+                
+                // Get unique subjects
+                const subjects = [...new Set(questions.map(q => {
+                    const subj = q.subject ? q.subject.toUpperCase() : 'CHEMISTRY';
+                    return subj;
+                }))];
+                
+                // Define subject icons
+                const subjectIcons = {
+                    'MATHS': '📐',
+                    'PHYSICS': '⚛️',
+                    'CHEMISTRY': '🧪'
+                };
+                
+                // Generate subject cards
+                const subjectsGrid = document.getElementById('subjects-grid');
+                subjectsGrid.innerHTML = '';
+                
+                subjects.forEach(subject => {
+                    const card = document.createElement('div');
+                    card.className = 'subject-card';
+                    card.setAttribute('data-subject', subject);
+                    card.innerHTML = `
+                        <div class="subject-icon">${subjectIcons[subject] || '📚'}</div>
+                        <h3>${subject.charAt(0) + subject.slice(1).toLowerCase()}</h3>
+                    `;
+                    
+                    // Add click handler
+                    card.addEventListener('click', () => {
+                        window.location.href = `test.html?subject=${subject}`;
+                    });
+                    
+                    subjectsGrid.appendChild(card);
+                });
+            })
+            .catch(error => console.error('Error loading subjects:', error));
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
